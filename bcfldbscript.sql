@@ -69,7 +69,153 @@ ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.stu
 
 
 ------------------
--- { New Table} --
+-- LESSON --
+------------------
+-- Create Sequence
+CREATE SEQUENCE public.lesson_id_seq
+    START WITH 100
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+
+-- Create Table
+CREATE TABLE public.lesson (
+    lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
+    name character varying(25) NOT NULL,
+    season character varying(50) NOT NULL,
+    lesson_date DATE NOT NULL,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.lesson OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.lesson_id_seq OWNED BY public.lesson.lesson_id;
+-- END OF LESSON --
+
+------------------
+-- PROGAM --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.program_id_seq
+    START WITH 10
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.program (
+    program_id integer NOT NULL DEFAULT nextval('program_id_seq'),
+    program_type character varying(50) NOT NULL,
+    cost integer,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT program_id_pk PRIMARY KEY (program_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.program OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
+-- END OF PROGAM --
+
+------------------
+-- TERM --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.term_id_seq
+    START WITH 10
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.term (
+    term_id integer NOT NULL DEFAULT nextval('term_id_seq'),
+    total_cost integer,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT term_id_pk PRIMARY KEY (term_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.term OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.term_id_seq OWNED BY public.term.term_id;
+-- END OF TERM --
+
+------------------
+-- INVOICE --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.invoice_id_seq
+    START WITH 1000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.invoice (
+    invoice_number integer NOT NULL DEFAULT nextval('invoice_id_seq'),
+    invoice_date date,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.invoice OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.invoice_id_seq OWNED BY public.invoice.invoice_id;
+-- END OF INVOICE --
+
+
+------------------
+-- PAYMENT_TRANSACTION --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.pay_transaction_id_seq
+    START WITH 1000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.pay_transaction (
+    transaction_id integer NOT NULL DEFAULT nextval('pay_transaction_id_seq'),
+    method character varying(50) NOT NULL,
+    result boolean,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT pay_transaction_id_pk PRIMARY KEY (pay_transaction_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.pay_transaction OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.pay_transaction_id_seq OWNED BY public.pay_transaction.pay_transaction_id;
+-- END OF PAYMENT_TRANSACTION --
+
+------------------
+-- new table --
 ------------------
 -- Create Sequence
 -- Create a sequence if we need to control start #
@@ -82,8 +228,6 @@ ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.stu
 -- Alter Sequence Owned by the table primary key to make it more efficient
 
 -- END OF {New Table}--
-
-
 
 
 ----------------------------------------------------
