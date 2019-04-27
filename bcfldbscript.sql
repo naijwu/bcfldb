@@ -433,7 +433,17 @@ ALTER TABLE ONLY public.student_contact
 
 -- teacher:report
 
+-- student:report 1:M
 
+-- program:lesson 1:M
+
+-- term:program 1:M
+
+-- student:term 1:M
+
+-- term:invoice 1:1
+
+-- invoice:pay_transaction 1:M
 
 
 
