@@ -356,14 +356,14 @@ CREATE TABLE public.invoice (
     invoice_number integer NOT NULL DEFAULT nextval('invoice_id_seq'),
     invoice_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_id)
+    CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_number)
 );
 
 -- Alter Table Ownder to postgres
 ALTER TABLE public.invoice OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.invoice_id_seq OWNED BY public.invoice.invoice_id;
+ALTER SEQUENCE public.invoice_id_seq OWNED BY public.invoice.invoice_number;
 -- END OF INVOICE --
 
 
