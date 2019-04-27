@@ -217,6 +217,39 @@ ALTER TABLE public.timesheet OWNER TO postgres;
 ALTER SEQUENCE public.timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
 -- END OF PAYROLL --
 
+
+------------------
+-- REPORT_CARD --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.report_card_id_seq
+    START WITH 1000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.report_card (
+    report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
+    score integer NOT NULL,
+    interim_report jsonb, 
+    report bytea NOT NULL,
+    submitted_date date,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT report_card_id_pk PRIMARY KEY (report_card_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.report_card OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card_id;
+-- END OF PAYROLL --
+
+
 ------------------
 -- LESSON --
 ------------------
@@ -390,8 +423,15 @@ ALTER SEQUENCE public.pay_transaction_id_seq OWNED BY public.pay_transaction.tra
 ALTER TABLE ONLY public.student_contact
     ADD CONSTRAINT student_id_pk FOREIGN KEY (membership_id) REFERENCES public.student(membership_id) ON DELETE CASCADE;
 
--- PK {table.pk} in {table.fk} as FK
+-- guardian:contact 1:1
 
+-- payroll:timesheet 1:M
+
+-- teacher:payroll 1:1
+
+-- teacher:timesheet 1:M
+
+-- teacher:report
 
 
 
