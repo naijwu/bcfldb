@@ -56,6 +56,9 @@ CREATE TABLE public.student_contact (
   	email character varying(50),
   	home_phone character varying(12),
   	address character varying(50),
+    city character varying(25),
+    province character varying(2),
+    postal_code character varying(7),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT student_contact_id_pk PRIMARY KEY (student_contact_id)
 );
@@ -116,6 +119,9 @@ CREATE TABLE public.guardian_contact (
     email character varying(50),
     home_phone character varying(12),
     address character varying(50),
+    city character varying(25),
+    province character varying(2),
+    postal_code character varying(7),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT guardian_contact_id_pk PRIMARY KEY (guardian_contact_id)
 );
@@ -477,3 +483,5 @@ ALTER FUNCTION public.last_updated() OWNER TO postgres;
 -- Add last_updated column to all tables
 CREATE TRIGGER last_updated BEFORE UPDATE ON student FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
+
+
