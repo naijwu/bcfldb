@@ -47,3 +47,28 @@ INSERT INTO public.student(
     ('Esther Lu', 'Esther Lu', '2003-12-28', 'female', 'student', 10, '2018-09-06', 'Pacific Academy'),
     ('Meryl Tu', 'Meryl Tu', '2005-03-26', 'female', 'student', 8, '2018-09-15', 'Pacific Academy'),
     ('Karl Jiang', 'Jiatong Jiang', '2003-11-13', 'male', 'student', 10, '2018-10-13', 'Mennonite Educational Institute');
+
+
+--public.guardian
+INSERT INTO public.guardian(guardian_id, guardian_name, relationship)
+  VALUES
+    ('1006', 'JaYoung Baik', 'mother'),
+    ('1016', 'Mack Tan', 'father');
+
+--public.guardian_contact
+INSERT INTO public.guardian_contact(guardian_contact_id, cell_phone, email, home_phone, address, city, province, postal_code)
+  VALUES
+    ('1006', '778-886-3351', 'isomil100@gmail.com', '', '16923 103A Ave', 'Surrey', 'BC', 'V4N 4N9');
+
+--public.program
+INSERT INTO public.program(program_id, program_type, cost)
+  VALUES
+    ('10', 'debate'),
+    ('11', 'math'),
+    ('12', 'english');
+
+--public.lesson
+INSERT INTO public.lesson(lesson_id, name, season, lesson_time, lesson_date)
+  VALUES
+    ('100', 'debate', 'fall', ''),
+    ('101', 'debate', 'fall', '');

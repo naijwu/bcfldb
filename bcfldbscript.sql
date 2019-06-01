@@ -280,6 +280,7 @@ CREATE TABLE public.lesson (
     lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
     name character varying(25) NOT NULL,
     season character varying(50) NOT NULL,
+    lesson_time TIMESTAMP, -- need to set database timezone using "SET timezone = 'PST';"
     lesson_date DATE NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     program_id_fk integer REFERENCES program(program_id),
