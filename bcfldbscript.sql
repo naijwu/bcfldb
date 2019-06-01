@@ -153,7 +153,7 @@ CREATE SEQUENCE public.teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
-    subjects character varying(50) NOT NULL,
+    lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches
     level integer NOT NULL,
     start_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -262,6 +262,8 @@ ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card
 ------------------
 -- LESSON --
 ------------------
+-- The lesson table is UNIQUE to debate students only; math students will only be registered in the math program
+
 -- Create Sequence
 CREATE SEQUENCE public.lesson_id_seq
     START WITH 100
@@ -280,6 +282,8 @@ CREATE TABLE public.lesson (
     season character varying(50) NOT NULL,
     lesson_date DATE NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
+    program_id_fk integer REFERENCES program(program_id),
+    teacher_id_fk integer REFERENCES teacher(teacher_id),
     CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
 );
 
