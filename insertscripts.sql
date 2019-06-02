@@ -63,9 +63,9 @@ INSERT INTO public.guardian_contact(guardian_contact_id, cell_phone, email, home
 --public.program
 INSERT INTO public.program(program_id, program_type, cost)
   VALUES
-    ('10', 'debate'),
-    ('11', 'math'),
-    ('12', 'english');
+    ('10', 'debate', '0'),
+    ('11', 'math', '0'),
+    ('12', 'english', '0');
 
 --public.lesson
 INSERT INTO public.lesson(lesson_id, name, season, lesson_time, lesson_date)
