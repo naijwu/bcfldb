@@ -19,8 +19,10 @@ CREATE SEQUENCE public.student_id_seq
 CREATE TABLE public.student (
     membership_id integer NOT NULL DEFAULT nextval('student_id_seq'),
     preferred_name character varying(50) NOT NULL,
-  	legal_name character varying(50) NOT NULL, -- raw data null 
+  	legal_name character varying(50) NOT NULL, -- raw data null
   	date_of_birth DATE NOT NULL,
+    gender character varying(7) NOT NULL,
+    membership_type character varying(50) NOT NULL,
   	grade integer NOT NULL, -- raw data null
   	date_of_registration DATE NOT NULL,
   	school character varying(50),
@@ -53,8 +55,9 @@ CREATE TABLE public.student_contact (
     student_contact_id integer NOT NULL DEFAULT nextval('student_contact_id_seq'),
     membership_id integer NOT NULL,
   	cell_phone character varying(12),
-  	email character varying(50),
   	home_phone character varying(12),
+  	email character varying(50),
+  	facebook character varying(50),
   	address character varying(50),
     city character varying(25),
     province character varying(2),
@@ -86,7 +89,7 @@ CREATE SEQUENCE public.guardian_id_seq
 -- Create Table
 CREATE TABLE public.guardian (
     guardian_id integer NOT NULL DEFAULT nextval('guardian_id_seq'),
-    guardian_name character varying(50) NOT NULL, -- raw data null 
+    guardian_name character varying(50) NOT NULL, -- raw data null
     relationship character varying(50),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT guardian_id_pk PRIMARY KEY (guardian_id)
@@ -150,7 +153,7 @@ CREATE SEQUENCE public.teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
-    subjects character varying(50) NOT NULL,
+    lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches
     level integer NOT NULL,
     start_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -241,7 +244,7 @@ CREATE SEQUENCE public.report_card_id_seq
 CREATE TABLE public.report_card (
     report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
     score integer NOT NULL,
-    interim_report jsonb, 
+    interim_report jsonb,
     report bytea NOT NULL,
     submitted_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -259,6 +262,8 @@ ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card
 ------------------
 -- LESSON --
 ------------------
+-- The lesson table is UNIQUE to debate students only; math students will only be registered in the math program
+
 -- Create Sequence
 CREATE SEQUENCE public.lesson_id_seq
     START WITH 100
@@ -275,8 +280,11 @@ CREATE TABLE public.lesson (
     lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
     name character varying(25) NOT NULL,
     season character varying(50) NOT NULL,
+    lesson_time TIMESTAMP, -- need to set database timezone using "SET timezone = 'PST';"
     lesson_date DATE NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
+    program_id_fk integer REFERENCES program(program_id),
+    teacher_id_fk integer REFERENCES teacher(teacher_id),
     CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
 );
 
@@ -483,5 +491,3 @@ ALTER FUNCTION public.last_updated() OWNER TO postgres;
 -- Add last_updated column to all tables
 CREATE TRIGGER last_updated BEFORE UPDATE ON student FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
-
-
