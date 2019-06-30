@@ -1,80 +1,13 @@
+-- Revision: 1.0
+-- Date: June 8, 2019
+-- Todo: FK constraints are not defined yet
 
 ----------------------------------------------------
 -- DEFINE SEQUENCE, TABLE, PRIMARY KEY CONSTRAINT --
 ----------------------------------------------------
 
--------------
--- STUDENT --
--------------
--- Create Sequence. Create a sequence if we need to control start #
--- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.student_id_seq
-    START WITH 1000
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
--- Create Table
-CREATE TABLE public.student (
-    membership_id integer NOT NULL DEFAULT nextval('student_id_seq'),
-    preferred_name character varying(50) NOT NULL,
-  	legal_name character varying(50) NOT NULL, -- raw data null
-  	date_of_birth DATE NOT NULL,
-    gender character varying(7) NOT NULL,
-    membership_type character varying(50) NOT NULL,
-  	grade integer NOT NULL, -- raw data null
-  	date_of_registration DATE NOT NULL,
-  	school character varying(50),
-    last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT student_id_pk PRIMARY KEY (membership_id)
-);
-
--- Alter Table Owner to postgres
-ALTER TABLE public.student OWNER TO postgres;
-
--- Alter Sequence Owned by the table primary key to make it more efficient
--- This means when student table is deleted, automatically delete this sequence.
-ALTER SEQUENCE public.student_id_seq OWNED BY public.student.membership_id;
--- END OF STUDENT --
-
----------------------
--- STUDENT CONTACT --
----------------------
--- Create Sequence
-CREATE SEQUENCE public.student_contact_id_seq
-    START WITH 1000
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
--- Create Table
-CREATE TABLE public.student_contact (
-    student_contact_id integer NOT NULL DEFAULT nextval('student_contact_id_seq'),
-    membership_id integer NOT NULL,
-  	cell_phone character varying(12),
-  	home_phone character varying(12),
-  	email character varying(50),
-  	facebook character varying(50),
-  	address character varying(50),
-    city character varying(25),
-    province character varying(2),
-    postal_code character varying(7),
-    last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT student_contact_id_pk PRIMARY KEY (student_contact_id)
-);
-
--- Alter Table Owner to postgres
-ALTER TABLE public.student_contact OWNER TO postgres;
-
--- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.student_contact_id;
--- END OF STUDENT_CONTACT --
-
-
--------------
+------------
 -- GUARDIAN --
 -------------
 -- Create Sequence. Create a sequence if we need to control start #
@@ -118,6 +51,7 @@ CREATE SEQUENCE public.guardian_contact_id_seq
 -- Create Table
 CREATE TABLE public.guardian_contact (
     guardian_contact_id integer NOT NULL DEFAULT nextval('guardian_contact_id_seq'),
+    guardian_id integer NOT NULL REFERENCES guardian(guardian_id), -- FK
     cell_phone character varying(12),
     email character varying(50),
     home_phone character varying(12),
@@ -137,6 +71,78 @@ ALTER SEQUENCE public.guardian_contact_id_seq OWNED BY public.guardian_contact.g
 -- END OF GUARDIAN_CONTACT --
 
 
+-------------
+-- STUDENT --
+-------------
+-- Create Sequence. Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.student_id_seq
+    START WITH 1000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.student (
+    membership_id integer NOT NULL DEFAULT nextval('student_id_seq'),
+    guardian_id integer NOT NULL REFERENCES guardian(guardian_id), -- FK
+    preferred_name character varying(50) NOT NULL,
+  	legal_name character varying(50) NOT NULL, -- raw data null
+  	date_of_birth DATE NOT NULL,
+    gender character varying(7) NOT NULL,
+    membership_type character varying(50) NOT NULL,
+  	grade integer NOT NULL, -- raw data null
+  	date_of_registration DATE NOT NULL,
+  	school character varying(50),
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT student_id_pk PRIMARY KEY (membership_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.student OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+-- This means when student table is deleted, automatically delete this sequence.
+ALTER SEQUENCE public.student_id_seq OWNED BY public.student.membership_id;
+-- END OF STUDENT --
+
+---------------------
+-- STUDENT CONTACT --
+---------------------
+-- Create Sequence
+CREATE SEQUENCE public.student_contact_id_seq
+    START WITH 1000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+-- Create Table
+CREATE TABLE public.student_contact (
+    student_contact_id integer NOT NULL DEFAULT nextval('student_contact_id_seq'),
+    membership_id integer NOT NULL REFERENCES student(membership_id), -- FK
+  	cell_phone character varying(12),
+  	home_phone character varying(12),
+  	email character varying(50),
+  	facebook character varying(50),
+  	address character varying(50),
+    city character varying(25),
+    province character varying(2),
+    postal_code character varying(7),
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT student_contact_id_pk PRIMARY KEY (student_contact_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.student_contact OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.student_contact_id;
+-- END OF STUDENT_CONTACT --
+
+
 ------------------
 -- TEACHER --
 ------------------
@@ -153,7 +159,7 @@ CREATE SEQUENCE public.teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
-    lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches
+    lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches, general description
     level integer NOT NULL,
     start_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -183,6 +189,7 @@ CREATE SEQUENCE public.payroll_id_seq
 -- Create Table
 CREATE TABLE public.payroll (
     payroll_id integer NOT NULL DEFAULT nextval('payroll_id_seq'),
+    teacher_id integer NOT NULL REFERENCES teacher(teacher_id), -- FK
     hourly_rate integer NOT NULL,
     payment numeric,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -213,6 +220,8 @@ CREATE SEQUENCE public.timesheet_id_seq
 -- Create Table
 CREATE TABLE public.timesheet (
     timesheet_id integer NOT NULL DEFAULT nextval('timesheet_id_seq'),
+    teacher_id integer REFERENCES teacher(teacher_id), -- FK
+    payroll_id integer REFERENCES payroll(payroll_id), -- FK
     hours_worked integer NOT NULL,
     submitted_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -227,36 +236,67 @@ ALTER SEQUENCE public.timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
 -- END OF PAYROLL --
 
 
+
 ------------------
--- REPORT_CARD --
+-- TERM --
 ------------------
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.report_card_id_seq
-    START WITH 1000
+CREATE SEQUENCE public.term_id_seq
+    START WITH 10
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
 
 -- Create Table
-CREATE TABLE public.report_card (
-    report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
-    score integer NOT NULL,
-    interim_report jsonb,
-    report bytea NOT NULL,
-    submitted_date date,
+CREATE TABLE public.term (
+    term_id integer NOT NULL DEFAULT nextval('term_id_seq'),
+    student_id integer REFERENCES student(membership_id), -- FK
+    total_cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT report_card_id_pk PRIMARY KEY (report_card_id)
+    CONSTRAINT term_id_pk PRIMARY KEY (term_id)
 );
 
 -- Alter Table Ownder to postgres
-ALTER TABLE public.report_card OWNER TO postgres;
+ALTER TABLE public.term OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card_id;
--- END OF PAYROLL --
+ALTER SEQUENCE public.term_id_seq OWNED BY public.term.term_id;
+-- END OF TERM --
+
+
+------------------
+-- PROGAM --
+------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.program_id_seq
+    START WITH 10
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.program (
+    program_id integer NOT NULL DEFAULT nextval('program_id_seq'),
+    term_id integer REFERENCES term(term_id), -- FK
+    program_type character varying(50) NOT NULL,
+    cost integer,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT program_id_pk PRIMARY KEY (program_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.program OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
+-- END OF PROGAM --
+
 
 
 ------------------
@@ -278,13 +318,14 @@ CREATE SEQUENCE public.lesson_id_seq
 -- Create Table
 CREATE TABLE public.lesson (
     lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
+    program_id integer REFERENCES program(program_id), -- FK
+    teacher_id integer REFERENCES teacher(teacher_id), -- FK
     name character varying(25) NOT NULL,
     season character varying(50) NOT NULL,
-    lesson_time TIMESTAMP, -- need to set database timezone using "SET timezone = 'PST';"
+    lesson_start_time character varying(5) NOT NULL, -- e.g. 15:00
+    lesson_end_time character varying(5) NOT NULL, -- e.g. 16:00
     lesson_date DATE NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
-    program_id_fk integer REFERENCES program(program_id),
-    teacher_id_fk integer REFERENCES teacher(teacher_id),
     CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
 );
 
@@ -295,62 +336,41 @@ ALTER TABLE public.lesson OWNER TO postgres;
 ALTER SEQUENCE public.lesson_id_seq OWNED BY public.lesson.lesson_id;
 -- END OF LESSON --
 
+
 ------------------
--- PROGAM --
+-- REPORT_CARD --
 ------------------
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.program_id_seq
-    START WITH 10
+CREATE SEQUENCE public.report_card_id_seq
+    START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
 
 -- Create Table
-CREATE TABLE public.program (
-    program_id integer NOT NULL DEFAULT nextval('program_id_seq'),
-    program_type character varying(50) NOT NULL,
-    cost integer,
+CREATE TABLE public.report_card (
+    report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
+    teacher_id integer REFERENCES teacher(teacher_id), -- FK
+    student_id integer REFERENCES student(membership_id), -- FK
+    score integer NOT NULL,
+    interim_report jsonb,
+    report bytea NOT NULL,
+    submitted_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT program_id_pk PRIMARY KEY (program_id)
+    CONSTRAINT report_card_id_pk PRIMARY KEY (report_card_id)
 );
 
 -- Alter Table Ownder to postgres
-ALTER TABLE public.program OWNER TO postgres;
+ALTER TABLE public.report_card OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
--- END OF PROGAM --
+ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card_id;
+-- END OF PAYROLL --
 
-------------------
--- TERM --
-------------------
--- Create Sequence
--- Create a sequence if we need to control start #
--- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.term_id_seq
-    START WITH 10
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
--- Create Table
-CREATE TABLE public.term (
-    term_id integer NOT NULL DEFAULT nextval('term_id_seq'),
-    total_cost integer,
-    last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT term_id_pk PRIMARY KEY (term_id)
-);
-
--- Alter Table Ownder to postgres
-ALTER TABLE public.term OWNER TO postgres;
-
--- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.term_id_seq OWNED BY public.term.term_id;
--- END OF TERM --
 
 ------------------
 -- INVOICE --
@@ -368,6 +388,7 @@ CREATE SEQUENCE public.invoice_id_seq
 -- Create Table
 CREATE TABLE public.invoice (
     invoice_number integer NOT NULL DEFAULT nextval('invoice_id_seq'),
+    term_id integer REFERENCES term(term_id), -- FK
     invoice_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_number)
@@ -397,6 +418,7 @@ CREATE SEQUENCE public.pay_transaction_id_seq
 -- Create Table
 CREATE TABLE public.pay_transaction (
     transaction_id integer NOT NULL DEFAULT nextval('pay_transaction_id_seq'),
+    invoice_number integer REFERENCES invoice(invoice_number), -- FK
     method character varying(50) NOT NULL,
     result boolean,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -445,7 +467,7 @@ ALTER TABLE ONLY public.student_contact
 
 -- teacher:timesheet 1:M
 
--- teacher:report
+-- teacher:report 1:M
 
 -- student:report 1:M
 
@@ -491,3 +513,15 @@ ALTER FUNCTION public.last_updated() OWNER TO postgres;
 -- Add last_updated column to all tables
 CREATE TRIGGER last_updated BEFORE UPDATE ON student FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON guardian FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON guardian_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON teacher FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON payroll FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON timesheet FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON term FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON program FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON lesson FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON invoice FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
+
