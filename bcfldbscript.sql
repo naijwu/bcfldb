@@ -159,6 +159,7 @@ CREATE SEQUENCE public.teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
+    teacher_name character varying(50) NOT NULL,
     lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches, general description
     level integer NOT NULL,
     start_date date,
