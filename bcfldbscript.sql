@@ -1,6 +1,10 @@
--- Revision: 1.0
--- Date: June 8, 2019
+-- Revision: 1.1
+-- Date: Aug 23, 2019
 -- Todo: FK constraints are not defined yet
+----------------------------------------------------
+-- Change Log ---------------------------------------------
+----------------------------------------------------
+-- 1.1 Additional columns in Teacher table
 
 ----------------------------------------------------
 -- DEFINE SEQUENCE, TABLE, PRIMARY KEY CONSTRAINT --
@@ -159,7 +163,15 @@ CREATE SEQUENCE public.teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
-    lessons_type character varying(50) NOT NULL, -- the lessons the teacher teaches, general description
+    teacher_name character varying(50) NOT NULL, -- raw data null 
+    cell_phone character varying(12),
+    email character varying(50),
+    home_phone character varying(12),
+    address character varying(50),
+    city character varying(25),
+    province character varying(2),
+    postal_code character varying(7),
+    subjects character varying(50) NOT NULL,
     level integer NOT NULL,
     start_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
