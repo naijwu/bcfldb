@@ -87,24 +87,43 @@ INSERT INTO public.student_contact(membership_id, cell_phone, home_phone, email,
 
 
 
--- TEACHER --
+-- TEACHER (level = intern (1), trainer (2), coach (3)) --
+INSERT INTO public.teacher(teacher_id, teacher_name, lessons_type, level, start_date)
+ VALUES
+  ('100', 'Alexander McGuigan', 'Debate, Business, Mock Trials', 3, ''),
+  ('101', 'Tiana Park', 'Debate, English', 3, ''),
+  ('102', 'Rose Oh', 'Debate', 2, '2019-09-01'),
+  ('103', 'Chloe Kim', 'Debate', 2, '2019-09-01'),
+  ('104', 'Lauryn Lee', 'Debate', 2, '2019-09-01'),
+  ('105', 'Jae Wu Chun', 'Debate', 2, '2019-09-01'),
+  ('106', 'Kevin Roe', 'Debate', 2, '2019-09-01'),
+  ('107', 'Joseph Jung', 'Debate', 2, '2019-09-01'),
 
 
 -- PAYROLL --
+INSERT INTO public.payroll(payroll_id, hourly_rate, payment)
+ VALUES
+  ('?', '?', '?');
 
 
 -- TIMESHEET --
+INSERT INTO public.payroll(timesheet_id, hours_worked, submitted_date)
+ VALUES
+  ('?', '?', '?');
 
 
 -- TERM --
+INSERT INTO public.payroll(term_id, total_cost)
+ VALUES
+  ('?', '?');
 
 
 -- PROGAM --
 INSERT INTO public.program(program_id, program_type, cost)
   VALUES
-    ('10', 'debate', '0'),
-    ('11', 'math', '0'),
-    ('12', 'english', '0');
+   ('10', 'debate', '0'),
+   ('11', 'math', '0'),
+   ('12', 'english', '0');
 
 -- LESSON --
 INSERT INTO public.lesson(lesson_id, name, season, lesson_time, lesson_date)
@@ -113,10 +132,18 @@ INSERT INTO public.lesson(lesson_id, name, season, lesson_time, lesson_date)
     ('101', 'debate', 'fall', '');
 
 -- REPORT_CARD --
+INSERT INTO public.payroll(report_card_id, score, interim_report, report, submitted_date)
+ VALUES
+  ('?', '?', '?', '?', '?');
 
 
 -- INVOICE --
+INSERT INTO public.payroll(invoice_number, invoice_date)
+ VALUES
+  ('?', '?');
 
 
 -- PAYMENT_TRANSACTION --
-
+INSERT INTO public.payroll(transaction_id, method, result)
+ VALUES
+  ('?', '?', '?');
