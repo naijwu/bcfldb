@@ -204,6 +204,7 @@ CREATE TABLE public.payroll (
     teacher_id integer NOT NULL,
     hourly_rate integer NOT NULL,
     payment numeric,
+    payment_date date NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT payroll_id_pk PRIMARY KEY (payroll_id)
 );
