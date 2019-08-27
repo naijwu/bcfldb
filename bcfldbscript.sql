@@ -1,9 +1,10 @@
--- Revision: 1.1
--- Date: Aug 23, 2019
+-- Revision: 1.2
+-- Date: Aug 26, 2019
 -- Todo: FK constraints are not defined yet
 ----------------------------------------------------
--- Change Log ---------------------------------------------
+-- Change Log --------------------------------------
 ----------------------------------------------------
+-- 1.2 Foreign key columns added. No constraint added.
 -- 1.1 Additional columns in Teacher table
 
 ----------------------------------------------------
@@ -11,7 +12,7 @@
 ----------------------------------------------------
 
 
-------------
+-------------
 -- GUARDIAN --
 -------------
 -- Create Sequence. Create a sequence if we need to control start #
@@ -26,7 +27,7 @@ CREATE SEQUENCE public.guardian_id_seq
 -- Create Table
 CREATE TABLE public.guardian (
     guardian_id integer NOT NULL DEFAULT nextval('guardian_id_seq'),
-    guardian_name character varying(50) NOT NULL, -- raw data null
+    guardian_name character varying(50) NOT NULL, -- raw data null 
     relationship character varying(50),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT guardian_id_pk PRIMARY KEY (guardian_id)
@@ -55,7 +56,7 @@ CREATE SEQUENCE public.guardian_contact_id_seq
 -- Create Table
 CREATE TABLE public.guardian_contact (
     guardian_contact_id integer NOT NULL DEFAULT nextval('guardian_contact_id_seq'),
-    guardian_id integer NOT NULL REFERENCES guardian(guardian_id), -- FK
+    guardian_id integer NOT NULL,
     cell_phone character varying(12),
     email character varying(50),
     home_phone character varying(12),
@@ -75,6 +76,7 @@ ALTER SEQUENCE public.guardian_contact_id_seq OWNED BY public.guardian_contact.g
 -- END OF GUARDIAN_CONTACT --
 
 
+
 -------------
 -- STUDENT --
 -------------
@@ -90,15 +92,13 @@ CREATE SEQUENCE public.student_id_seq
 -- Create Table
 CREATE TABLE public.student (
     membership_id integer NOT NULL DEFAULT nextval('student_id_seq'),
-    guardian_id integer NOT NULL REFERENCES guardian(guardian_id), -- FK
+    guardian_id integer NOT NULL,
     preferred_name character varying(50) NOT NULL,
-  	legal_name character varying(50) NOT NULL, -- raw data null
-  	date_of_birth DATE NOT NULL,
-    gender character varying(7) NOT NULL,
-    membership_type character varying(50) NOT NULL,
-  	grade integer NOT NULL, -- raw data null
-  	date_of_registration DATE NOT NULL,
-  	school character varying(50),
+    legal_name character varying(50) NOT NULL, -- raw data null 
+    date_of_birth DATE NOT NULL,
+    grade integer NOT NULL, -- raw data null
+    date_of_registration DATE NOT NULL,
+    school character varying(50),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT student_id_pk PRIMARY KEY (membership_id)
 );
@@ -126,12 +126,11 @@ CREATE SEQUENCE public.student_contact_id_seq
 -- Create Table
 CREATE TABLE public.student_contact (
     student_contact_id integer NOT NULL DEFAULT nextval('student_contact_id_seq'),
-    membership_id integer NOT NULL REFERENCES student(membership_id), -- FK
-  	cell_phone character varying(12),
-  	home_phone character varying(12),
-  	email character varying(50),
-  	facebook character varying(50),
-  	address character varying(50),
+    membership_id integer NOT NULL,
+    cell_phone character varying(12),
+    email character varying(50),
+    home_phone character varying(12),
+    address character varying(50),
     city character varying(25),
     province character varying(2),
     postal_code character varying(7),
@@ -153,7 +152,7 @@ ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.stu
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.teacher_id_seq
+CREATE SEQUENCE public.teacher_teacher_id_seq
     START WITH 100
     INCREMENT BY 1
     NO MINVALUE
@@ -162,7 +161,7 @@ CREATE SEQUENCE public.teacher_id_seq
 
 -- Create Table
 CREATE TABLE public.teacher (
-    teacher_id integer NOT NULL DEFAULT nextval('teacher_id_seq'),
+    teacher_id integer NOT NULL DEFAULT nextval('teacher_teacher_id_seq'),
     teacher_name character varying(50) NOT NULL, -- raw data null 
     cell_phone character varying(12),
     email character varying(50),
@@ -182,8 +181,9 @@ CREATE TABLE public.teacher (
 ALTER TABLE public.teacher OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.teacher_id_seq OWNED BY public.teacher.teacher_id;
+ALTER SEQUENCE public.teacher_teacher_id_seq OWNED BY public.teacher.teacher_id;
 -- END OF TEACHER --
+
 
 ------------------
 -- PAYROLL --
@@ -201,7 +201,7 @@ CREATE SEQUENCE public.payroll_id_seq
 -- Create Table
 CREATE TABLE public.payroll (
     payroll_id integer NOT NULL DEFAULT nextval('payroll_id_seq'),
-    teacher_id integer NOT NULL REFERENCES teacher(teacher_id), -- FK
+    teacher_id integer NOT NULL,
     hourly_rate integer NOT NULL,
     payment numeric,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -214,6 +214,7 @@ ALTER TABLE public.payroll OWNER TO postgres;
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.payroll_id_seq OWNED BY public.payroll.payroll_id;
 -- END OF PAYROLL --
+
 
 
 ------------------
@@ -232,8 +233,10 @@ CREATE SEQUENCE public.timesheet_id_seq
 -- Create Table
 CREATE TABLE public.timesheet (
     timesheet_id integer NOT NULL DEFAULT nextval('timesheet_id_seq'),
-    teacher_id integer REFERENCES teacher(teacher_id), -- FK
-    payroll_id integer REFERENCES payroll(payroll_id), -- FK
+    payroll_id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    ts_start date NOT NULL,
+    ts_end date NOT NULL,
     hours_worked integer NOT NULL,
     submitted_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -246,6 +249,7 @@ ALTER TABLE public.timesheet OWNER TO postgres;
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
 -- END OF PAYROLL --
+
 
 
 
@@ -265,7 +269,7 @@ CREATE SEQUENCE public.term_id_seq
 -- Create Table
 CREATE TABLE public.term (
     term_id integer NOT NULL DEFAULT nextval('term_id_seq'),
-    student_id integer REFERENCES student(membership_id), -- FK
+    membership_id integer NOT NULL,
     total_cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT term_id_pk PRIMARY KEY (term_id)
@@ -295,7 +299,7 @@ CREATE SEQUENCE public.program_id_seq
 -- Create Table
 CREATE TABLE public.program (
     program_id integer NOT NULL DEFAULT nextval('program_id_seq'),
-    term_id integer REFERENCES term(term_id), -- FK
+    term_id integer NOT NULL,
     program_type character varying(50) NOT NULL,
     cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -310,13 +314,12 @@ ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
 -- END OF PROGAM --
 
 
-
 ------------------
 -- LESSON --
 ------------------
 -- The lesson table is UNIQUE to debate students only; math students will only be registered in the math program
 
--- Create Sequence
+--- Create Sequence
 CREATE SEQUENCE public.lesson_id_seq
     START WITH 100
     INCREMENT BY 1
@@ -330,12 +333,10 @@ CREATE SEQUENCE public.lesson_id_seq
 -- Create Table
 CREATE TABLE public.lesson (
     lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
-    program_id integer REFERENCES program(program_id), -- FK
-    teacher_id integer REFERENCES teacher(teacher_id), -- FK
+    teacher_id integer NOT NULL,
+    program_id integer NOT NULL,
     name character varying(25) NOT NULL,
     season character varying(50) NOT NULL,
-    lesson_start_time character varying(5) NOT NULL, -- e.g. 15:00
-    lesson_end_time character varying(5) NOT NULL, -- e.g. 16:00
     lesson_date DATE NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
@@ -365,10 +366,11 @@ CREATE SEQUENCE public.report_card_id_seq
 -- Create Table
 CREATE TABLE public.report_card (
     report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
-    teacher_id integer REFERENCES teacher(teacher_id), -- FK
-    student_id integer REFERENCES student(membership_id), -- FK
+    lesson_id integer NOT NULL,
+    membership_id integer NOT NULL,
+    teacher_id integer NOT NULL,
     score integer NOT NULL,
-    interim_report jsonb,
+    interim_report jsonb, 
     report bytea NOT NULL,
     submitted_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -400,7 +402,7 @@ CREATE SEQUENCE public.invoice_id_seq
 -- Create Table
 CREATE TABLE public.invoice (
     invoice_number integer NOT NULL DEFAULT nextval('invoice_id_seq'),
-    term_id integer REFERENCES term(term_id), -- FK
+    term_id integer NOT NULL,
     invoice_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_number)
@@ -430,7 +432,7 @@ CREATE SEQUENCE public.pay_transaction_id_seq
 -- Create Table
 CREATE TABLE public.pay_transaction (
     transaction_id integer NOT NULL DEFAULT nextval('pay_transaction_id_seq'),
-    invoice_number integer REFERENCES invoice(invoice_number), -- FK
+    invoice_number integer NOT NULL,
     method character varying(50) NOT NULL,
     result boolean,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
