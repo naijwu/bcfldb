@@ -17,7 +17,7 @@
 -------------
 -- Create Sequence. Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.guardian_id_seq
+CREATE SEQUENCE public.guardian_guardian_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -26,7 +26,7 @@ CREATE SEQUENCE public.guardian_id_seq
 
 -- Create Table
 CREATE TABLE public.guardian (
-    guardian_id integer NOT NULL DEFAULT nextval('guardian_id_seq'),
+    guardian_id integer NOT NULL DEFAULT nextval('guardian_guardian_id_seq'),
     guardian_name character varying(50) NOT NULL, -- raw data null 
     relationship character varying(50),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -38,14 +38,14 @@ ALTER TABLE public.guardian OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when guardian table is deleted, automatically delete this sequence.
-ALTER SEQUENCE public.guardian_id_seq OWNED BY public.guardian.guardian_id;
+ALTER SEQUENCE public.guardian_guardian_id_seq OWNED BY public.guardian.guardian_id;
 -- END OF GUARDIAN --
 
 ---------------------
 -- GUARDIAN CONTACT --
 ---------------------
 -- Create Sequence
-CREATE SEQUENCE public.guardian_contact_id_seq
+CREATE SEQUENCE public.guardian_contact_guardian_contact_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -55,7 +55,7 @@ CREATE SEQUENCE public.guardian_contact_id_seq
 
 -- Create Table
 CREATE TABLE public.guardian_contact (
-    guardian_contact_id integer NOT NULL DEFAULT nextval('guardian_contact_id_seq'),
+    guardian_contact_id integer NOT NULL DEFAULT nextval('guardian_contact_guardian_contact_id_seq'),
     guardian_id integer NOT NULL,
     cell_phone character varying(12),
     email character varying(50),
@@ -72,7 +72,7 @@ CREATE TABLE public.guardian_contact (
 ALTER TABLE public.guardian_contact OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.guardian_contact_id_seq OWNED BY public.guardian_contact.guardian_contact_id;
+ALTER SEQUENCE public.guardian_contact_guardian_contact_id_seq OWNED BY public.guardian_contact.guardian_contact_id;
 -- END OF GUARDIAN_CONTACT --
 
 
@@ -82,7 +82,7 @@ ALTER SEQUENCE public.guardian_contact_id_seq OWNED BY public.guardian_contact.g
 -------------
 -- Create Sequence. Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.student_id_seq
+CREATE SEQUENCE public.student_student_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -91,7 +91,7 @@ CREATE SEQUENCE public.student_id_seq
 
 -- Create Table
 CREATE TABLE public.student (
-    membership_id integer NOT NULL DEFAULT nextval('student_id_seq'),
+    membership_id integer NOT NULL DEFAULT nextval('student_student_id_seq'),
     guardian_id integer NOT NULL,
     preferred_name character varying(50) NOT NULL,
     legal_name character varying(50) NOT NULL, -- raw data null 
@@ -108,14 +108,14 @@ ALTER TABLE public.student OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
-ALTER SEQUENCE public.student_id_seq OWNED BY public.student.membership_id;
+ALTER SEQUENCE public.student_student_id_seq OWNED BY public.student.membership_id;
 -- END OF STUDENT --
 
 ---------------------
 -- STUDENT CONTACT --
 ---------------------
 -- Create Sequence
-CREATE SEQUENCE public.student_contact_id_seq
+CREATE SEQUENCE public.student_contact_student_contact_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -125,7 +125,7 @@ CREATE SEQUENCE public.student_contact_id_seq
 
 -- Create Table
 CREATE TABLE public.student_contact (
-    student_contact_id integer NOT NULL DEFAULT nextval('student_contact_id_seq'),
+    student_contact_id integer NOT NULL DEFAULT nextval('student_contact_student_contact_id_seq'),
     membership_id integer NOT NULL,
     cell_phone character varying(12),
     email character varying(50),
@@ -142,7 +142,7 @@ CREATE TABLE public.student_contact (
 ALTER TABLE public.student_contact OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.student_contact_id_seq OWNED BY public.student_contact.student_contact_id;
+ALTER SEQUENCE public.student_contact_student_contact_id_seq OWNED BY public.student_contact.student_contact_id;
 -- END OF STUDENT_CONTACT --
 
 
@@ -191,7 +191,7 @@ ALTER SEQUENCE public.teacher_teacher_id_seq OWNED BY public.teacher.teacher_id;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.payroll_id_seq
+CREATE SEQUENCE public.payroll_payroll_id_seq
     START WITH 100
     INCREMENT BY 1
     NO MINVALUE
@@ -200,7 +200,7 @@ CREATE SEQUENCE public.payroll_id_seq
 
 -- Create Table
 CREATE TABLE public.payroll (
-    payroll_id integer NOT NULL DEFAULT nextval('payroll_id_seq'),
+    payroll_id integer NOT NULL DEFAULT nextval('payroll_payroll_id_seq'),
     teacher_id integer NOT NULL,
     hourly_rate integer NOT NULL,
     payment numeric,
@@ -213,7 +213,7 @@ CREATE TABLE public.payroll (
 ALTER TABLE public.payroll OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.payroll_id_seq OWNED BY public.payroll.payroll_id;
+ALTER SEQUENCE public.payroll_payroll_id_seq OWNED BY public.payroll.payroll_id;
 -- END OF PAYROLL --
 
 
@@ -224,7 +224,7 @@ ALTER SEQUENCE public.payroll_id_seq OWNED BY public.payroll.payroll_id;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.timesheet_id_seq
+CREATE SEQUENCE public.timesheet_timesheet_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -233,7 +233,7 @@ CREATE SEQUENCE public.timesheet_id_seq
 
 -- Create Table
 CREATE TABLE public.timesheet (
-    timesheet_id integer NOT NULL DEFAULT nextval('timesheet_id_seq'),
+    timesheet_id integer NOT NULL DEFAULT nextval('timesheet_timesheet_id_seq'),
     payroll_id integer NOT NULL,
     teacher_id integer NOT NULL,
     ts_start date NOT NULL,
@@ -248,7 +248,7 @@ CREATE TABLE public.timesheet (
 ALTER TABLE public.timesheet OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
+ALTER SEQUENCE public.timesheet_timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
 -- END OF PAYROLL --
 
 
@@ -260,7 +260,7 @@ ALTER SEQUENCE public.timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.term_id_seq
+CREATE SEQUENCE public.term_term_id_seq
     START WITH 10
     INCREMENT BY 1
     NO MINVALUE
@@ -269,7 +269,7 @@ CREATE SEQUENCE public.term_id_seq
 
 -- Create Table
 CREATE TABLE public.term (
-    term_id integer NOT NULL DEFAULT nextval('term_id_seq'),
+    term_id integer NOT NULL DEFAULT nextval('term_term_id_seq'),
     membership_id integer NOT NULL,
     total_cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -280,7 +280,7 @@ CREATE TABLE public.term (
 ALTER TABLE public.term OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.term_id_seq OWNED BY public.term.term_id;
+ALTER SEQUENCE public.term_term_id_seq OWNED BY public.term.term_id;
 -- END OF TERM --
 
 
@@ -290,7 +290,7 @@ ALTER SEQUENCE public.term_id_seq OWNED BY public.term.term_id;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.program_id_seq
+CREATE SEQUENCE public.program_program_id_seq
     START WITH 10
     INCREMENT BY 1
     NO MINVALUE
@@ -299,7 +299,7 @@ CREATE SEQUENCE public.program_id_seq
 
 -- Create Table
 CREATE TABLE public.program (
-    program_id integer NOT NULL DEFAULT nextval('program_id_seq'),
+    program_id integer NOT NULL DEFAULT nextval('program_program_id_seq'),
     term_id integer NOT NULL,
     program_type character varying(50) NOT NULL,
     cost integer,
@@ -311,7 +311,7 @@ CREATE TABLE public.program (
 ALTER TABLE public.program OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
+ALTER SEQUENCE public.program_program_id_seq OWNED BY public.program.program_id;
 -- END OF PROGAM --
 
 
@@ -321,7 +321,7 @@ ALTER SEQUENCE public.program_id_seq OWNED BY public.program.program_id;
 -- The lesson table is UNIQUE to debate students only; math students will only be registered in the math program
 
 --- Create Sequence
-CREATE SEQUENCE public.lesson_id_seq
+CREATE SEQUENCE public.lesson_lesson_id_seq
     START WITH 100
     INCREMENT BY 1
     NO MINVALUE
@@ -333,7 +333,7 @@ CREATE SEQUENCE public.lesson_id_seq
 
 -- Create Table
 CREATE TABLE public.lesson (
-    lesson_id integer NOT NULL DEFAULT nextval('lesson_id_seq'),
+    lesson_id integer NOT NULL DEFAULT nextval('lesson_lesson_id_seq'),
     teacher_id integer NOT NULL,
     program_id integer NOT NULL,
     name character varying(25) NOT NULL,
@@ -347,7 +347,7 @@ CREATE TABLE public.lesson (
 ALTER TABLE public.lesson OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.lesson_id_seq OWNED BY public.lesson.lesson_id;
+ALTER SEQUENCE public.lesson_lesson_id_seq OWNED BY public.lesson.lesson_id;
 -- END OF LESSON --
 
 
@@ -357,7 +357,7 @@ ALTER SEQUENCE public.lesson_id_seq OWNED BY public.lesson.lesson_id;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.report_card_id_seq
+CREATE SEQUENCE public.report_card_report_card_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -366,7 +366,7 @@ CREATE SEQUENCE public.report_card_id_seq
 
 -- Create Table
 CREATE TABLE public.report_card (
-    report_card_id integer NOT NULL DEFAULT nextval('report_card_id_seq'),
+    report_card_id integer NOT NULL DEFAULT nextval('report_card_report_card_id_seq'),
     lesson_id integer NOT NULL,
     membership_id integer NOT NULL,
     teacher_id integer NOT NULL,
@@ -382,7 +382,7 @@ CREATE TABLE public.report_card (
 ALTER TABLE public.report_card OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card_id;
+ALTER SEQUENCE public.report_card_report_card_id_seq OWNED BY public.report_card.report_card_id;
 -- END OF PAYROLL --
 
 
@@ -393,7 +393,7 @@ ALTER SEQUENCE public.report_card_id_seq OWNED BY public.report_card.report_card
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.invoice_id_seq
+CREATE SEQUENCE public.invoice_invoice_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -402,7 +402,7 @@ CREATE SEQUENCE public.invoice_id_seq
 
 -- Create Table
 CREATE TABLE public.invoice (
-    invoice_number integer NOT NULL DEFAULT nextval('invoice_id_seq'),
+    invoice_number integer NOT NULL DEFAULT nextval('invoice_invoice_id_seq'),
     term_id integer NOT NULL,
     invoice_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -413,7 +413,7 @@ CREATE TABLE public.invoice (
 ALTER TABLE public.invoice OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.invoice_id_seq OWNED BY public.invoice.invoice_number;
+ALTER SEQUENCE public.invoice_invoice_id_seq OWNED BY public.invoice.invoice_number;
 -- END OF INVOICE --
 
 
@@ -423,7 +423,7 @@ ALTER SEQUENCE public.invoice_id_seq OWNED BY public.invoice.invoice_number;
 -- Create Sequence
 -- Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.pay_transaction_id_seq
+CREATE SEQUENCE public.pay_transaction_pay_transaction_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -432,7 +432,7 @@ CREATE SEQUENCE public.pay_transaction_id_seq
 
 -- Create Table
 CREATE TABLE public.pay_transaction (
-    transaction_id integer NOT NULL DEFAULT nextval('pay_transaction_id_seq'),
+    transaction_id integer NOT NULL DEFAULT nextval('pay_transaction_pay_transaction_id_seq'),
     invoice_number integer NOT NULL,
     method character varying(50) NOT NULL,
     result boolean,
@@ -444,7 +444,7 @@ CREATE TABLE public.pay_transaction (
 ALTER TABLE public.pay_transaction OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.pay_transaction_id_seq OWNED BY public.pay_transaction.transaction_id;
+ALTER SEQUENCE public.pay_transaction_pay_transaction_id_seq OWNED BY public.pay_transaction.transaction_id;
 -- END OF PAYMENT_TRANSACTION --
 
 ------------------
