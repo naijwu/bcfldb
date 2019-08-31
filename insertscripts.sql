@@ -88,16 +88,22 @@ INSERT INTO public.student_contact(membership_id, cell_phone, home_phone, email,
 
 
 -- TEACHER (level = intern (1), trainer (2), coach (3)) --
-INSERT INTO public.teacher(teacher_id, teacher_name, lessons_type, level, start_date)
- VALUES
-  ('100', 'Alexander McGuigan', 'Debate, Business, Mock Trials', 3, ''),
-  ('101', 'Tiana Park', 'Debate, English', 3, ''),
-  ('102', 'Rose Oh', 'Debate', 2, '2019-09-01'),
-  ('103', 'Chloe Kim', 'Debate', 2, '2019-09-01'),
-  ('104', 'Lauryn Lee', 'Debate', 2, '2019-09-01'),
-  ('105', 'Jae Wu Chun', 'Debate', 2, '2019-09-01'),
-  ('106', 'Kevin Roe', 'Debate', 2, '2019-09-01'),
-  ('107', 'Joseph Jung', 'Debate', 2, '2019-09-01'),
+INSERT INTO public.teacher(
+    teacher_name, cell_phone, email, home_phone, address, city, province, postal_code, subjects, level, start_date)
+VALUES 
+('John Smith','604-555-0000','john.smith@gmail.com',null,'1055 west Hasting st.','Vancouver','BC','V5K 0A1','Debate',1,'2018-12-31'),
+('Michael Jo','604-555-1111','michael.jo@gmail.com','604-939-8893','739 Linton st.','Coquitlam','BC','V5J 6K4','Coding',5,'2017-12-31');
+
+--INSERT INTO public.teacher(teacher_id, teacher_name, lessons_type, level, start_date)
+-- VALUES
+--  ('100', 'Alexander McGuigan', 'Debate, Business, Mock Trials', 3, ''),
+--  ('101', 'Tiana Park', 'Debate, English', 3, ''),
+--  ('102', 'Rose Oh', 'Debate', 2, '2019-09-01'),
+--  ('103', 'Chloe Kim', 'Debate', 2, '2019-09-01'),
+--  ('104', 'Lauryn Lee', 'Debate', 2, '2019-09-01'),
+--  ('105', 'Jae Wu Chun', 'Debate', 2, '2019-09-01'),
+--  ('106', 'Kevin Roe', 'Debate', 2, '2019-09-01'),
+--  ('107', 'Joseph Jung', 'Debate', 2, '2019-09-01'),
 
 
 -- PAYROLL --
