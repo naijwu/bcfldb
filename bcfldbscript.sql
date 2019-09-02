@@ -163,16 +163,16 @@ CREATE SEQUENCE public.teacher_teacher_id_seq
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_teacher_id_seq'),
     teacher_name character varying(50) NOT NULL, -- raw data null 
-    cell_phone character varying(12),
-    email character varying(50),
+    cell_phone character varying(12) NOT NULL,
+    email character varying(50) NOT NULL,
     home_phone character varying(12),
-    address character varying(50),
-    city character varying(25),
-    province character varying(2),
-    postal_code character varying(7),
+    address character varying(50) NOT NULL,
+    city character varying(25) NOT NULL,
+    province character varying(2) NOT NULL,
+    postal_code character varying(7) NOT NULL,
     subjects character varying(50) NOT NULL,
     level integer NOT NULL,
-    start_date date,
+    start_date date NOT NULL,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT teacher_id_pk PRIMARY KEY (teacher_id)
 );
@@ -540,3 +540,12 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PR
 CREATE TRIGGER last_updated BEFORE UPDATE ON invoice FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
 
+
+---------------------------------------------------
+------------ ALTER TABLE --------------------------
+---------------------------------------------------
+-- Add additional columns to tables here
+
+ALTER TABLE public.teacher
+ADD COLUMN status character varying(12) NOT NULL DEFAULT 'active', -- active, terminated, retired, leave of absent (lob)
+ADD COLUMN end_date date;
