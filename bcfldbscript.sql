@@ -326,16 +326,31 @@ ALTER SEQUENCE public.program_program_id_seq OWNED BY public.program.program_id;
 -----------------------------
 -- TERMPROGRAM: Join table --
 -----------------------------
+-- Create Sequence
+-- Create a sequence if we need to control start #
+-- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
+CREATE SEQUENCE public.termprogram_termprogram_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 -- Create Table
 CREATE TABLE public.termprogram (
-    term_id integer NOT NULL REFERENCES term ON DELETE CASCADE,
-    program_id integer NOT NULL REFERENCES program,
-    CONSTRAINT termprogram_id_pk PRIMARY KEY (term_id, program_id)
+    termprogram_id integer NOT NULL DEFAULT nextval('termprogram_termprogram_id_seq'),
+    term_id integer NOT NULL,
+    program_id integer NOT NULL,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT termprogram_id_pk PRIMARY KEY (termprogram_id)
 );
 
 -- Alter Table Ownder to postgres
 ALTER TABLE public.termprogram OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+ALTER SEQUENCE public.termprogram_termprogram_id_seq OWNED BY public.termprogram.program_id;
+-- END OF PROGAM --
 
 
 ------------------
