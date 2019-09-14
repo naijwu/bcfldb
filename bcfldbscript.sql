@@ -4,6 +4,7 @@
 ----------------------------------------------------
 -- Change Log --------------------------------------
 ----------------------------------------------------
+-- 1.3 Term-Program join table created as it turns out m:m between term:program
 -- 1.2 Foreign key columns added. No constraint added.
 -- 1.1 Additional columns in Teacher table
 
@@ -77,6 +78,7 @@ ALTER SEQUENCE public.guardian_contact_guardian_contact_id_seq OWNED BY public.g
 
 
 
+
 -------------
 -- STUDENT --
 -------------
@@ -96,6 +98,8 @@ CREATE TABLE public.student (
     preferred_name character varying(50) NOT NULL,
     legal_name character varying(50) NOT NULL, -- raw data null 
     date_of_birth DATE NOT NULL,
+    gender character varying(6) NOT NULL,
+    membership_type character varying(20) NOT NULL, -- student, former student, trainer, intern
     grade integer NOT NULL, -- raw data null
     date_of_registration DATE NOT NULL,
     school character varying(50),
@@ -171,8 +175,10 @@ CREATE TABLE public.teacher (
     province character varying(2) NOT NULL,
     postal_code character varying(7) NOT NULL,
     subjects character varying(50) NOT NULL,
+    status character varying(12) NOT NULL DEFAULT 'active', -- active, terminated, retired, leave of absent (lob)
     level integer NOT NULL,
     start_date date NOT NULL,
+    end_date date,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT teacher_id_pk PRIMARY KEY (teacher_id)
 );
@@ -271,7 +277,7 @@ CREATE SEQUENCE public.term_term_id_seq
 CREATE TABLE public.term (
     term_id integer NOT NULL DEFAULT nextval('term_term_id_seq'),
     membership_id integer NOT NULL,
-    total_cost integer,
+    total_cost numeric,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT term_id_pk PRIMARY KEY (term_id)
 );
@@ -282,6 +288,8 @@ ALTER TABLE public.term OWNER TO postgres;
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.term_term_id_seq OWNED BY public.term.term_id;
 -- END OF TERM --
+
+
 
 
 ------------------
@@ -300,7 +308,6 @@ CREATE SEQUENCE public.program_program_id_seq
 -- Create Table
 CREATE TABLE public.program (
     program_id integer NOT NULL DEFAULT nextval('program_program_id_seq'),
-    term_id integer NOT NULL,
     program_type character varying(50) NOT NULL,
     cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
@@ -313,6 +320,22 @@ ALTER TABLE public.program OWNER TO postgres;
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.program_program_id_seq OWNED BY public.program.program_id;
 -- END OF PROGAM --
+
+
+
+-----------------------------
+-- TERMPROGRAM: Join table --
+-----------------------------
+
+-- Create Table
+CREATE TABLE public.termprogram (
+    term_id integer NOT NULL REFERENCES term ON DELETE CASCADE,
+    program_id integer NOT NULL REFERENCES program,
+    CONSTRAINT termprogram_id_pk PRIMARY KEY (term_id, program_id)
+);
+
+-- Alter Table Ownder to postgres
+ALTER TABLE public.termprogram OWNER TO postgres;
 
 
 ------------------
@@ -534,6 +557,7 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON teacher FOR EACH ROW EXECUTE PROCED
 CREATE TRIGGER last_updated BEFORE UPDATE ON payroll FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON timesheet FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON term FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON termprogram FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON program FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON lesson FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PROCEDURE last_updated();
@@ -546,6 +570,4 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUT
 ---------------------------------------------------
 -- Add additional columns to tables here
 
-ALTER TABLE public.teacher
-ADD COLUMN status character varying(12) NOT NULL DEFAULT 'active', -- active, terminated, retired, leave of absent (lob)
-ADD COLUMN end_date date;
+
