@@ -4,6 +4,7 @@
 ----------------------------------------------------
 -- Change Log --------------------------------------
 ----------------------------------------------------
+-- 1.4 Merge Guardian Guardian_Contact
 -- 1.3 Term-Program join table created as it turns out m:m between term:program
 -- 1.2 Foreign key columns added. No constraint added.
 -- 1.1 Additional columns in Teacher table
@@ -30,6 +31,13 @@ CREATE TABLE public.guardian (
     guardian_id integer NOT NULL DEFAULT nextval('guardian_guardian_id_seq'),
     guardian_name character varying(50) NOT NULL, -- raw data null 
     relationship character varying(50),
+    cell_phone character varying(12),
+    email character varying(50),
+    home_phone character varying(12),
+    address character varying(50),
+    city character varying(25),
+    province character varying(2),
+    postal_code character varying(7),
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT guardian_id_pk PRIMARY KEY (guardian_id)
 );
@@ -41,40 +49,6 @@ ALTER TABLE public.guardian OWNER TO postgres;
 -- This means when guardian table is deleted, automatically delete this sequence.
 ALTER SEQUENCE public.guardian_guardian_id_seq OWNED BY public.guardian.guardian_id;
 -- END OF GUARDIAN --
-
----------------------
--- GUARDIAN CONTACT --
----------------------
--- Create Sequence
-CREATE SEQUENCE public.guardian_contact_guardian_contact_id_seq
-    START WITH 1000
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
--- Create Table
-CREATE TABLE public.guardian_contact (
-    guardian_contact_id integer NOT NULL DEFAULT nextval('guardian_contact_guardian_contact_id_seq'),
-    guardian_id integer NOT NULL,
-    cell_phone character varying(12),
-    email character varying(50),
-    home_phone character varying(12),
-    address character varying(50),
-    city character varying(25),
-    province character varying(2),
-    postal_code character varying(7),
-    last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT guardian_contact_id_pk PRIMARY KEY (guardian_contact_id)
-);
-
--- Alter Table Owner to postgres
-ALTER TABLE public.guardian_contact OWNER TO postgres;
-
--- Alter Sequence Owned by the table primary key to make it more efficient
-ALTER SEQUENCE public.guardian_contact_guardian_contact_id_seq OWNED BY public.guardian_contact.guardian_contact_id;
--- END OF GUARDIAN_CONTACT --
 
 
 
@@ -166,6 +140,7 @@ CREATE SEQUENCE public.teacher_teacher_id_seq
 -- Create Table
 CREATE TABLE public.teacher (
     teacher_id integer NOT NULL DEFAULT nextval('teacher_teacher_id_seq'),
+    program_id integer NOT NULL,
     teacher_name character varying(50) NOT NULL, -- raw data null 
     cell_phone character varying(12) NOT NULL,
     email character varying(50) NOT NULL,
@@ -174,7 +149,7 @@ CREATE TABLE public.teacher (
     city character varying(25) NOT NULL,
     province character varying(2) NOT NULL,
     postal_code character varying(7) NOT NULL,
-    subjects character varying(50) NOT NULL,
+    subject character varying(50) NOT NULL, -- Program type: coding, math, english, mechatronics
     status character varying(12) NOT NULL DEFAULT 'active', -- active, terminated, retired, leave of absent (lob)
     level integer NOT NULL,
     start_date date NOT NULL,
@@ -308,7 +283,7 @@ CREATE SEQUENCE public.program_program_id_seq
 -- Create Table
 CREATE TABLE public.program (
     program_id integer NOT NULL DEFAULT nextval('program_program_id_seq'),
-    program_type character varying(50) NOT NULL,
+    subject character varying(50) NOT NULL,
     cost integer,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT program_id_pk PRIMARY KEY (program_id)
@@ -372,7 +347,7 @@ CREATE SEQUENCE public.lesson_lesson_id_seq
 -- Create Table
 CREATE TABLE public.lesson (
     lesson_id integer NOT NULL DEFAULT nextval('lesson_lesson_id_seq'),
-    teacher_id integer NOT NULL,
+    teacher_id integer, -- To be able to save Lesson first and assign Teacher later
     program_id integer NOT NULL,
     name character varying(25) NOT NULL,
     season character varying(50) NOT NULL,
@@ -567,7 +542,6 @@ ALTER FUNCTION public.last_updated() OWNER TO postgres;
 CREATE TRIGGER last_updated BEFORE UPDATE ON student FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON guardian FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON guardian_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON teacher FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON payroll FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON timesheet FOR EACH ROW EXECUTE PROCEDURE last_updated();
@@ -584,5 +558,6 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUT
 ------------ ALTER TABLE --------------------------
 ---------------------------------------------------
 -- Add additional columns to tables here
-
+--ALTER TABLE lesson
+--ALTER COLUMN teacher_id DROP NOT NULL;
 
