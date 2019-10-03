@@ -58,7 +58,7 @@ ALTER SEQUENCE public.guardian_guardian_id_seq OWNED BY public.guardian.guardian
 -------------
 -- Create Sequence. Create a sequence if we need to control start #
 -- If no need to control, simple combination of "SERIAL PRIMARY KEY" will do
-CREATE SEQUENCE public.student_student_id_seq
+CREATE SEQUENCE public.student_membership_id_seq
     START WITH 1000
     INCREMENT BY 1
     NO MINVALUE
@@ -67,7 +67,7 @@ CREATE SEQUENCE public.student_student_id_seq
 
 -- Create Table
 CREATE TABLE public.student (
-    membership_id integer NOT NULL DEFAULT nextval('student_student_id_seq'),
+    membership_id integer NOT NULL DEFAULT nextval('student_membership_id_seq'),
     guardian_id integer NOT NULL,
     preferred_name character varying(50) NOT NULL,
     legal_name character varying(50) NOT NULL, -- raw data null 
@@ -86,7 +86,7 @@ ALTER TABLE public.student OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
-ALTER SEQUENCE public.student_student_id_seq OWNED BY public.student.membership_id;
+ALTER SEQUENCE public.student_membership_id_seq OWNED BY public.student.membership_id;
 -- END OF STUDENT --
 
 ---------------------
@@ -461,6 +461,35 @@ ALTER SEQUENCE public.pay_transaction_pay_transaction_id_seq OWNED BY public.pay
 -- END OF PAYMENT_TRANSACTION --
 
 ------------------
+-- USER --
+------------------
+CREATE SEQUENCE public.user_user_id_seq
+    START WITH 100
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.user (
+    user_id integer NOT NULL DEFAULT nextval('user_user_id_seq'),
+    user_name character varying(50) NOT NULL, -- raw data null 
+    email character varying(50) NOT NULL UNIQUE,
+    password text NOT NULL,
+    role character varying(20) NOT NULL, -- admin, manager, reader
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT user_id_pk PRIMARY KEY (user_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.user OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+-- This means when student table is deleted, automatically delete this sequence.
+ALTER SEQUENCE public.user_user_id_seq OWNED BY public.user.user_id;
+
+
+------------------
 -- new table --
 ------------------
 -- Create Sequence
@@ -474,6 +503,12 @@ ALTER SEQUENCE public.pay_transaction_pay_transaction_id_seq OWNED BY public.pay
 -- Alter Sequence Owned by the table primary key to make it more efficient
 
 -- END OF {New Table}--
+
+---------------------
+-- Create Crypto ----
+---------------------
+
+CREATE EXTENSION pgcrypto;
 
 
 ----------------------------------------------------
@@ -552,6 +587,7 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON lesson FOR EACH ROW EXECUTE PROCEDU
 CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON invoice FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON user FOR EACH ROW EXECUTE PROCEDURE last_updated();
 
 
 ---------------------------------------------------
