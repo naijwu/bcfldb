@@ -461,7 +461,7 @@ ALTER SEQUENCE public.pay_transaction_pay_transaction_id_seq OWNED BY public.pay
 -- END OF PAYMENT_TRANSACTION --
 
 ------------------
--- USER --
+--- USER ---------
 ------------------
 CREATE SEQUENCE public.user_user_id_seq
     START WITH 100
@@ -476,7 +476,6 @@ CREATE TABLE public.user (
     user_name character varying(50) NOT NULL, -- raw data null 
     email character varying(50) NOT NULL UNIQUE,
     password text NOT NULL,
-    role character varying(20) NOT NULL, -- admin, manager, reader
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT user_id_pk PRIMARY KEY (user_id)
 );
@@ -487,6 +486,60 @@ ALTER TABLE public.user OWNER TO postgres;
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
 ALTER SEQUENCE public.user_user_id_seq OWNED BY public.user.user_id;
+
+
+------------------
+--- ROLE ---------
+------------------
+CREATE SEQUENCE public.role_role_id_seq
+    START WITH 10
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.role (
+    role_id integer NOT NULL DEFAULT nextval('role_role_id_seq'),
+    role_name character varying(50) NOT NULL, 
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT role_id_pk PRIMARY KEY (role_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.role OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+-- This means when student table is deleted, automatically delete this sequence.
+ALTER SEQUENCE public.role_role_id_seq OWNED BY public.role.role_id;
+
+
+------------------
+--- USERROLE-----
+------------------
+CREATE SEQUENCE public.userrole_userrole_id_seq
+    START WITH 100
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- Create Table
+CREATE TABLE public.userrole (
+    userrole_id integer NOT NULL DEFAULT nextval('userrole_userrole_id_seq'),
+    user_id integer NOT NULL,
+    role_id integer NOT NULL,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    CONSTRAINT userrole_id_pk PRIMARY KEY (userrole_id)
+);
+
+-- Alter Table Owner to postgres
+ALTER TABLE public.userrole OWNER TO postgres;
+
+-- Alter Sequence Owned by the table primary key to make it more efficient
+-- This means when student table is deleted, automatically delete this sequence.
+ALTER SEQUENCE public.userrole_userrole_id_seq OWNED BY public.userrole.userrole_id;
+
 
 
 ------------------
@@ -574,10 +627,10 @@ ALTER FUNCTION public.last_updated() OWNER TO postgres;
 --
 
 -- Add last_updated column to all tables
-CREATE TRIGGER last_updated BEFORE UPDATE ON student FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON guardian FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON teacher FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.student FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.student_contact FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.guardian FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.teacher FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON payroll FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON timesheet FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON term FOR EACH ROW EXECUTE PROCEDURE last_updated();
@@ -586,8 +639,10 @@ CREATE TRIGGER last_updated BEFORE UPDATE ON program FOR EACH ROW EXECUTE PROCED
 CREATE TRIGGER last_updated BEFORE UPDATE ON lesson FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON report_card FOR EACH ROW EXECUTE PROCEDURE last_updated();
 CREATE TRIGGER last_updated BEFORE UPDATE ON invoice FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
-CREATE TRIGGER last_updated BEFORE UPDATE ON user FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.pay_transaction FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.user FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.role FOR EACH ROW EXECUTE PROCEDURE last_updated();
+CREATE TRIGGER last_updated BEFORE UPDATE ON public.user_role FOR EACH ROW EXECUTE PROCEDURE last_updated();
 
 
 ---------------------------------------------------
