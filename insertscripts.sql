@@ -95,7 +95,7 @@ VALUES
 
 -- TEACHER (level = intern (1), trainer (2), coach (3)) --
 INSERT INTO public.teacher(
-    teacher_name, cell_phone, email, home_phone, address, city, province, postal_code, subjects, status, level, start_date)
+    teacher_name, cell_phone, email, home_phone, address, city, province, postal_code, subject, status, level, start_date)
 VALUES 
 ('John Smith','604-555-0000','john.smith@gmail.com',null,'1055 west Hasting st.','Vancouver','BC','V5K 0A1','Debate', 'active', 1,'2018-12-31'),
 ('Michael Jo','604-555-1111','michael.jo@gmail.com','604-939-8893','739 Linton st.','Coquitlam','BC','V5J 6K4','Coding', 'active', 5,'2017-12-31');
@@ -164,6 +164,30 @@ INSERT INTO public.payroll(transaction_id, method, result)
 
 
 
-INSERT INTO public."user"(
- user_name, email, password, role)
-  VALUES ('Michael Jo', 'michael.jo@gmail.com', crypt('hello', gen_salt('bf'), 'admin');
+-- INSERT INTO public."user"(
+--  user_name, email, password, role)
+--   VALUES ('Michael Jo', 'michael.jo@gmail.com', crypt('hello', gen_salt('bf'), 'admin');
+
+-- User & Role --
+INSERT INTO public.user(
+  user_name, email, password)
+  VALUES ( 'MJToolbox', 'michael.jo@gmail.com', 'password');
+
+INSERT INTO public.role( role_name)
+VALUES 
+('admin'),
+('manager'),
+('viewer');
+
+INSERT INTO public.userrole(
+  user_id, role_id)
+  VALUES (100, 10);
+
+
+  INSERT INTO public.users(
+  username, password, enabled)
+  VALUES ('michael.jo@gmail.com', '$2a$12$R5x9qtnCadcEi/QcmbCpI.71j6UPAt3mGNnyYukkPd1gYxPUPdHru', '1'); #password
+  
+  INSERT INTO public.authorities(
+  username, authority)
+  VALUES ('michael.jo@gmail.com', 'admin');
