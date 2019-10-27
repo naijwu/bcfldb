@@ -42,8 +42,8 @@ CREATE TABLE public.guardian (
     CONSTRAINT guardian_id_pk PRIMARY KEY (guardian_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.guardian OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.guardian OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when guardian table is deleted, automatically delete this sequence.
@@ -81,8 +81,8 @@ CREATE TABLE public.student (
     CONSTRAINT student_id_pk PRIMARY KEY (membership_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.student OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.student OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
@@ -116,8 +116,8 @@ CREATE TABLE public.student_contact (
     CONSTRAINT student_contact_id_pk PRIMARY KEY (student_contact_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.student_contact OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.student_contact OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.student_contact_student_contact_id_seq OWNED BY public.student_contact.student_contact_id;
@@ -158,8 +158,8 @@ CREATE TABLE public.teacher (
     CONSTRAINT teacher_id_pk PRIMARY KEY (teacher_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.teacher OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.teacher OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.teacher_teacher_id_seq OWNED BY public.teacher.teacher_id;
@@ -190,8 +190,8 @@ CREATE TABLE public.payroll (
     CONSTRAINT payroll_id_pk PRIMARY KEY (payroll_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.payroll OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.payroll OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.payroll_payroll_id_seq OWNED BY public.payroll.payroll_id;
@@ -225,8 +225,8 @@ CREATE TABLE public.timesheet (
     CONSTRAINT timesheet_id_pk PRIMARY KEY (timesheet_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.timesheet OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.timesheet OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.timesheet_timesheet_id_seq OWNED BY public.timesheet.timesheet_id;
@@ -257,8 +257,8 @@ CREATE TABLE public.term (
     CONSTRAINT term_id_pk PRIMARY KEY (term_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.term OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.term OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.term_term_id_seq OWNED BY public.term.term_id;
@@ -289,8 +289,8 @@ CREATE TABLE public.program (
     CONSTRAINT program_id_pk PRIMARY KEY (program_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.program OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.program OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.program_program_id_seq OWNED BY public.program.program_id;
@@ -320,8 +320,8 @@ CREATE TABLE public.termprogram (
     CONSTRAINT termprogram_id_pk PRIMARY KEY (termprogram_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.termprogram OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.termprogram OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.termprogram_termprogram_id_seq OWNED BY public.termprogram.program_id;
@@ -356,8 +356,8 @@ CREATE TABLE public.lesson (
     CONSTRAINT lesson_id_pk PRIMARY KEY (lesson_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.lesson OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.lesson OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.lesson_lesson_id_seq OWNED BY public.lesson.lesson_id;
@@ -391,8 +391,8 @@ CREATE TABLE public.report_card (
     CONSTRAINT report_card_id_pk PRIMARY KEY (report_card_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.report_card OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.report_card OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.report_card_report_card_id_seq OWNED BY public.report_card.report_card_id;
@@ -422,8 +422,8 @@ CREATE TABLE public.invoice (
     CONSTRAINT invoice_id_pk PRIMARY KEY (invoice_number)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.invoice OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.invoice OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.invoice_invoice_id_seq OWNED BY public.invoice.invoice_number;
@@ -453,8 +453,8 @@ CREATE TABLE public.pay_transaction (
     CONSTRAINT pay_transaction_id_pk PRIMARY KEY (transaction_id)
 );
 
--- Alter Table Ownder to postgres
-ALTER TABLE public.pay_transaction OWNER TO postgres;
+-- Alter Table Ownder to vglnsjjhodegjp
+ALTER TABLE public.pay_transaction OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 ALTER SEQUENCE public.pay_transaction_pay_transaction_id_seq OWNED BY public.pay_transaction.transaction_id;
@@ -480,8 +480,8 @@ CREATE TABLE public.user (
     CONSTRAINT user_id_pk PRIMARY KEY (user_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.user OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.user OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
@@ -512,8 +512,8 @@ CREATE TABLE public.role (
     CONSTRAINT role_id_pk PRIMARY KEY (role_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.role OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.role OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
@@ -544,8 +544,8 @@ CREATE TABLE public.userrole (
     CONSTRAINT userrole_id_pk PRIMARY KEY (userrole_id)
 );
 
--- Alter Table Owner to postgres
-ALTER TABLE public.userrole OWNER TO postgres;
+-- Alter Table Owner to vglnsjjhodegjp
+ALTER TABLE public.userrole OWNER TO vglnsjjhodegjp;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
@@ -562,7 +562,7 @@ ALTER SEQUENCE public.userrole_userrole_id_seq OWNED BY public.userrole.userrole
 
 -- Create Table
 
--- Alter Table Ownder to postgres
+-- Alter Table Ownder to vglnsjjhodegjp
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 
@@ -615,7 +615,7 @@ ALTER TABLE ONLY public.student_contact
 ---------------------------------------------------
 
 --
--- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: vglnsjjhodegjp
 --
 
 CREATE FUNCTION last_updated() RETURNS trigger
@@ -627,14 +627,14 @@ BEGIN
 END $$;
 
 
-ALTER FUNCTION public.last_updated() OWNER TO postgres;
+ALTER FUNCTION public.last_updated() OWNER TO vglnsjjhodegjp;
 
 
 ---------------------------------------------------
 --------------- DEFINE TRIGGER --------------------
 ---------------------------------------------------
 --
--- Name: last_updated; Type: TRIGGER; Schema: public; Owner: postgres
+-- Name: last_updated; Type: TRIGGER; Schema: public; Owner: vglnsjjhodegjp
 --
 
 -- Add last_updated column to all tables
