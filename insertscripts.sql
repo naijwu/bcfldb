@@ -169,25 +169,18 @@ INSERT INTO public.payroll(transaction_id, method, result)
 --   VALUES ('Michael Jo', 'michael.jo@gmail.com', crypt('hello', gen_salt('bf'), 'admin');
 
 -- User & Role --
-INSERT INTO public.user(
-  user_name, email, password)
-  VALUES ( 'MJToolbox', 'michael.jo@gmail.com', 'password');
 
-INSERT INTO public.role( role_name)
+INSERT INTO public.user(username, name, password, enabled)
+  VALUES ('michael.jo@gmail.com', 'Michael Jo','$2a$12$R5x9qtnCadcEi/QcmbCpI.71j6UPAt3mGNnyYukkPd1gYxPUPdHru', '1'); #password
+
+
+INSERT INTO public.role( authority)
 VALUES 
-('admin'),
-('manager'),
-('viewer');
+('ADMIN'),
+('STAFF'),
+('USER'),
+('GUEST')
 
 INSERT INTO public.userrole(
   user_id, role_id)
   VALUES (100, 10);
-
-
-  INSERT INTO public.users(
-  username, password, enabled)
-  VALUES ('michael.jo@gmail.com', '$2a$12$R5x9qtnCadcEi/QcmbCpI.71j6UPAt3mGNnyYukkPd1gYxPUPdHru', '1'); #password
-  
-  INSERT INTO public.authorities(
-  username, authority)
-  VALUES ('michael.jo@gmail.com', 'admin');
