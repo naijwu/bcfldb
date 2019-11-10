@@ -473,9 +473,10 @@ CREATE SEQUENCE public.user_user_id_seq
 -- Create Table
 CREATE TABLE public.user (
     user_id integer NOT NULL DEFAULT nextval('user_user_id_seq'),
-    user_name character varying(50) NOT NULL, -- raw data null 
-    email character varying(50) NOT NULL UNIQUE,
-    password text NOT NULL,
+    username character varying(50) NOT NULL,
+    name character varying(50) NOT NULL, -- raw data null 
+    password character varying(200) NOT NULL,
+    enabled boolean not null,
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT user_id_pk PRIMARY KEY (user_id)
 );
@@ -487,11 +488,12 @@ ALTER TABLE public.user OWNER TO postgres;
 -- This means when student table is deleted, automatically delete this sequence.
 ALTER SEQUENCE public.user_user_id_seq OWNED BY public.user.user_id;
 
-CREATE TABLE public.users(
-    username character varying(50) NOT NULL PRIMARY KEY,
-    password character varying(200) NOT NULL,
-    enabled boolean not null
-);
+
+-- CREATE TABLE public.users(
+--     username character varying(50) NOT NULL PRIMARY KEY,
+--     password character varying(200) NOT NULL,
+--     enabled boolean not null
+-- );
 
 
 ------------------
@@ -507,7 +509,7 @@ CREATE SEQUENCE public.role_role_id_seq
 -- Create Table
 CREATE TABLE public.role (
     role_id integer NOT NULL DEFAULT nextval('role_role_id_seq'),
-    role_name character varying(50) NOT NULL, 
+    authority character varying(50) NOT NULL, -- Role Name
     last_update timestamp without time zone DEFAULT now() NOT NULL,
     CONSTRAINT role_id_pk PRIMARY KEY (role_id)
 );
@@ -519,29 +521,24 @@ ALTER TABLE public.role OWNER TO postgres;
 -- This means when student table is deleted, automatically delete this sequence.
 ALTER SEQUENCE public.role_role_id_seq OWNED BY public.role.role_id;
 
-CREATE TABLE public.authorities(
-    username character varying(50) NOT NULL,
-    authority character varying(50) NOT NULL,
-    constraint fk_authorities_users foreign key(username) references users(username)
-);
+
 
 ------------------
 --- USERROLE-----
 ------------------
-CREATE SEQUENCE public.userrole_userrole_id_seq
-    START WITH 100
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+-- CREATE SEQUENCE public.userrole_userrole_id_seq
+--     START WITH 100
+--     INCREMENT BY 1
+--     NO MINVALUE
+--     NO MAXVALUE
+--     CACHE 1;
 
 -- Create Table
 CREATE TABLE public.userrole (
-    userrole_id integer NOT NULL DEFAULT nextval('userrole_userrole_id_seq'),
     user_id integer NOT NULL,
     role_id integer NOT NULL,
-    last_update timestamp without time zone DEFAULT now() NOT NULL,
-    CONSTRAINT userrole_id_pk PRIMARY KEY (userrole_id)
+    CREATE CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.user (user_id),
+    CREATE CONSTRAINT role_id_fk FOREIGN KEY (role_id) REFERENCES public.role (role_id)
 );
 
 -- Alter Table Owner to postgres
@@ -549,9 +546,13 @@ ALTER TABLE public.userrole OWNER TO postgres;
 
 -- Alter Sequence Owned by the table primary key to make it more efficient
 -- This means when student table is deleted, automatically delete this sequence.
-ALTER SEQUENCE public.userrole_userrole_id_seq OWNED BY public.userrole.userrole_id;
+-- ALTER SEQUENCE public.userrole_userrole_id_seq OWNED BY public.userrole.userrole_id;
 
-
+-- CREATE TABLE public.authorities(
+--     username character varying(50) NOT NULL,
+--     authority character varying(50) NOT NULL,
+--     constraint fk_authorities_users foreign key(username) references users(username)
+-- );
 
 ------------------
 -- new table --
@@ -586,7 +587,8 @@ CREATE EXTENSION pgcrypto;
 ALTER TABLE ONLY public.student_contact
     ADD CONSTRAINT student_id_pk FOREIGN KEY (membership_id) REFERENCES public.student(membership_id) ON DELETE CASCADE;
 
--- guardian:contact 1:1
+-- guardian:contact 1:1  
+
 
 -- payroll:timesheet 1:M
 
